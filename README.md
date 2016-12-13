@@ -1,44 +1,34 @@
 # hsCookie
 *A simple Cookie tool*
 
-----------
-#### **Cookie.get**
+---
+
+#### **Cookie.get(name)**
 *获取cookie*
+```
+Cookie.get('name') // hisheng
+```
 
-**args**
--- name
-**return**
--- cookie
+---
 
-
-----------
-#### **Cookie.all**
+#### **Cookie.all()**
 *获取所有cookie*
+```
+Cookie.all() // {name:'hisheng',nick:'nickname'}
+```
 
-**args**
--- none
-**return**
--- cookies object
+---
 
-----------
-#### **Cookie.set**
+#### **Cookie.set(name,value,options)**
 *设置cookie*
+```
+Cookie.set('name','hisheng',{path:'/',expires:60*20,domain:'www.github.com',secure:true})
+```
 
-**args**
--- name
--- value
--- options(对象，可选)
--- -- path : cookie路径
--- -- domain : cookie域名
--- -- expires : cookie过期时间(s秒)
--- -- secure
-**return**
--- cookies object
+---
 
-----------
-#### **Cookie.del**
+#### **Cookie.del(name,options)**
 *删除cookie*
-
-**args**
--- name
--- options(对象，可选，同上)
+```
+Cookie.del('name',{path:'/'})
+```
