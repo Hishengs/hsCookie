@@ -1,50 +1,63 @@
-(function(){
-	window.Cookie = undefined
+;(function(window){
+  if(typeof window === 'undefined'){
+    throw ReferenceError('window is not declared.');
+    return;
+  }
 
-	var Cookie = function(){}
+  var Cookie = function(){
+    this.cookie = window.document.cookie;
+  };
 
-	Cookie.prototype = {
-		version: '1.0.0',
-		author: 'Hisheng',
-		get: function(name){
-			return name?this.all()[name]:this.all()
-		},
-		all: function(){
-			var cookies = {}, splitedRawCookies = document.cookie.split(';'), splitedRawCookiesLen = splitedRawCookies.length
-			for(var i=0;i<splitedRawCookiesLen;i++){
-				var splitedCookie = splitedRawCookies[i].split('=')
-				cookies[splitedCookie[0].trim()] = splitedCookie[1]
-			}
-			return cookies
-		},
-		set: function(name,value){
-			var opts = arguments[2] || {} // 其他配置项
+  Cookie.prototype.version = '1.0.1';
 
-			var cookie = [
-				name, '=', value,
-				opts.path?'; path='+opts.path:'', // 路径
-				opts.expires?'; expires='+(function(expires){
-					if(typeof expires !== 'number')return ''
-					else {
-						var date = new Date()
-						date.setTime(date.getTime()+expires*1000) // 毫秒ms
-						return date.toUTCString()
-					}
-				})(opts.expires):'',
-				opts.domain?'; domain='+opts.domain:'',
-				opts.secure?'; secure':''
-			].join('')
+  Cookie.prototype.author = 'Hisheng';
 
-			document.cookie = cookie
+  Cookie.prototype.get = function(name){
+    return name ? this.all()[name] : this.all();
+  };
 
-			return this.all()
-		},
-		del: function(name){
-			var opts = arguments[1] || {}
-			opts.expires = -1
-			this.set(name,'',opts)
-		},
-	}
+  Cookie.prototype.all = function(){
+    var cookies = {}, splitedRawCookies = this.cookie.split(';');
 
-	window.Cookie = new Cookie()
-})(window)
+    for(var i = 0, ilen = splitedRawCookies.length; i < ilen; i++){
+      var splitedCookie = splitedRawCookies[i].split('=');
+      cookies[splitedCookie[0].trim()] = splitedCookie[1];
+    }
+
+    return cookies
+  };
+
+  Cookie.prototype.set = function(name, value){
+    var opts = arguments[2] || {}; // options
+
+    var cookie = [
+      name, '=', value,
+      opts.path ? '; path=' + opts.path : '', // set path
+      opts.expires ? '; expires=' + (function(expires){
+        if(typeof expires !== 'number')
+          return '';
+        else {
+          var date = new Date();
+          date.setTime(date.getTime() + expires * 1000); // ms
+          return date.toUTCString();
+        }
+      })(opts.expires) : '',
+      opts.domain ? '; domain=' + opts.domain : '',
+      opts.secure ? '; secure' : '',
+    ].join('');
+
+    this.cookie = cookie;
+
+    return this.all();
+  };
+
+  Cookie.prototype.del = function(name){
+    var opts = arguments[1] || {};
+    opts.expires = -1;
+    this.set(name, '', opts);
+  };
+
+  window.Cookie = Cookie;
+
+  window.hsCookie = new Cookie();
+})(window);
